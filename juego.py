@@ -12,9 +12,9 @@ class App:
 
         # Inicializar pygame para sonidos
         pygame.mixer.init()
-        pygame.mixer.music.load("fondo.mp3")  # Música de fondo
+        pygame.mixer.music.load("bg_music.mp3")  # Música de fondo
         pygame.mixer.music.play(-1)
-        self.sonido_disparo = pygame.mixer.Sound("disparo.mp3")
+        self.sonido_disparo = pygame.mixer.Sound("shoot.mp3")
 
         self.canvas = tk.Canvas(root, bg="lightblue", width=600, height=400)
         self.canvas.pack(pady=10)
