@@ -76,5 +76,5 @@ if __name__ == "__main__":
     camion1.setVelocidad(200)
     camion1.setRumbo(100)
     
-    print(camion2.claxon())
+    camion2.claxon()
     print(camion1)
