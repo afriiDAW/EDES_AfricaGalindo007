@@ -1,4 +1,5 @@
-from typing import List
+
+# DEFINICIÓN DE LAS CLASES
 
 class camion:
     def __init__(self, matricula: str, conductor: str, capacidad_kg: float, descripcion_carga: str ="", rumbo: int = 0, velocidad: int = 0):
@@ -6,8 +7,11 @@ class camion:
         self.conductor = conductor
         self.capacidad_kg = float(capacidad_kg)
         self.descripcion_carga = descripcion_carga
+
+        #ERROR EN LA CARGA NO MENOS DE 1 NI MAS DE 359
+
         if rumbo <1 or rumbo>359:
-            raise ValueError ("ERROR. NO SON VALORES VALIDOS")
+            raise ValueError ("NO SON VALORES VALIDOS")
         self.rumbo = int(rumbo)
         self.velocidad = int(velocidad)
         self.cajas = []
@@ -54,27 +58,29 @@ class Caja:
     
 
     
+try:
+    if __name__ == "__main__":
 
-if __name__ == "__main__":
+    # CAJAS    
+        caja1 = Caja("7", 8, "Teclados", 20, 30, 40)
+        caja2 = Caja("8", 20, "Componentes", 100, 200, 2)
+        caja3 = Caja("9", 400, "Zapatos", 10, 20, 30)
 
-# CAJAS    
-    caja1 = Caja("7", 8, "Teclados", 20, 30, 40)
-    caja2 = Caja("8", 20, "Componentes", 100, 200, 2)
-    caja3 = Caja("9", 400, "Zapatos", 10, 20, 30)
+    # CAMIONES
 
-# CAMIONES
+        camion1 = camion("6605CJW", "Diego", 200,"Escombros", 200, 120)
+        camion2 = camion("CA9575BL", "Dani", 300, "ordenadores", 350, 40)
 
-    camion1 = camion("6605CJW", "Diego", 200,"Escombros", 200, 120)
-    camion2 = camion("CA9575BL", "Dani", 300, "ordenadores", 350, 40)
-   
-    camion1.AñadirCaja(caja1)
-    camion1.AñadirCaja(caja2)
-    camion1.AñadirCaja(caja3)
+        camion1.AñadirCaja(caja1)
+        camion1.AñadirCaja(caja2)
+        camion1.AñadirCaja(caja3)
 
-    print(camion1)
+        print(camion1)
 
-    camion1.setVelocidad(200)
-    camion1.setRumbo(100)
-    
-    camion2.claxon()
-    print(camion1)
+        camion1.setVelocidad(200)
+        camion1.setRumbo(100)
+        
+        camion2.claxon()
+        print(camion1)
+except ValueError:
+    print("ERROR.")
