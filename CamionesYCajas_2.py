@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import pygame
+import math
 
 # -----------------------------
 # CLASES PROPORCIONADAS
@@ -19,12 +20,12 @@ class camion:
         self.cajas = []
 
     def __str__(self):
-        return (f"Matricula: {self.matricula}\n"
-                f"Conductor: {self.conductor}\n"
-                f"Capacidad: {self.capacidad_kg} kg\n"
-                f"Descripción de la Carga: {self.descripcion_carga}\n"
-                f"Rumbo: {self.rumbo} grados\n"
-                f"Velocidad: {self.velocidad}\n"
+        return (f"Matricula: {self.matricula}"
+                f"Conductor: {self.conductor}"
+                f"Capacidad: {self.capacidad_kg} kg"
+                f"Descripción de la Carga: {self.descripcion_carga}"
+                f"Rumbo: {self.rumbo} grados"
+                f"Velocidad: {self.velocidad}"
                 f"Cajas: {len(self.cajas)}")
 
     def AñadirCaja(self, Caja):
@@ -49,32 +50,43 @@ class Caja:
         self.altura = float(altura)
 
     def __str__(self):
-        return (f"Código: {self.codigo}\n"
-                f"Peso: {self.peso_kg} kg\n"
-                f"Descripción: {self.descripcion_carga}\n"
-                f"Largo: {self.largo}\n"
-                f"Áncho: {self.ancho}\n"
+        return (f"Código: {self.codigo}"
+                f"Peso: {self.peso_kg} kg"
+                f"Descripción: {self.descripcion_carga}"
+                f"Largo: {self.largo}"
+                f"Áncho: {self.ancho}"
                 f"Altura: {self.altura}")
 
 # -----------------------------
 # PROGRAMA PRINCIPAL TKINTER
 # -----------------------------
 pygame.init()
-pygame.mixer.music.load("claxon.mp3")  # Asegúrate de incluir el archivo
+pygame.mixer.music.load("claxon.mp3")
 
 camiones = []
 camion_activo = None
 
-# Ventana
 root = tk.Tk()
 root.title("Gestor de Camiones - VibeCoding")
-root.geometry("900x600")
+root.geometry("1200x700")
+
+# CANVAS GRANDE
+canvas = tk.Canvas(root, width=800, height=650, bg="white")
+canvas.pack(side="left", padx=10, pady=10)
+
+# Diccionario: matricula → rectángulo en pantalla
+rectangulos = {}
+textos = {}
 
 # -----------------------------
-# SECCIÓN: NUEVO CAMIÓN
+# SECCIÓN DERECHA
 # -----------------------------
-frame_nuevo = ttk.LabelFrame(root, text="Crear Camión")
-frame_nuevo.pack(side="left", fill="y", padx=10, pady=10)
+panel = ttk.Frame(root)
+panel.pack(side="right", fill="y", padx=10)
+
+# Crear camiones
+frame_nuevo = ttk.LabelFrame(panel, text="Crear Camión")
+frame_nuevo.pack(fill="x", pady=10)
 
 labels = ["Matrícula", "Conductor", "Capacidad (kg)", "Descripción", "Rumbo (1-359)", "Velocidad"]
 entries = {}
@@ -85,7 +97,6 @@ for l in labels:
     entries[l] = e
 
 def crear_camion():
-    global camion_activo
     try:
         nuevo = camion(
             entries["Matrícula"].get(),
@@ -97,6 +108,13 @@ def crear_camion():
         )
         camiones.append(nuevo)
         lista_camiones['values'] = [c.matricula for c in camiones]
+
+        # Crear rectángulo en canvas
+        rect = canvas.create_rectangle(50, 50, 130, 90, fill="red")
+        texto = canvas.create_text(90, 70, text=nuevo.matricula, fill="white")
+        rectangulos[nuevo.matricula] = rect
+        textos[nuevo.matricula] = texto
+
         messagebox.showinfo("OK", "Camión creado correctamente")
     except Exception as e:
         messagebox.showerror("Error", str(e))
@@ -104,11 +122,9 @@ def crear_camion():
 btn_crear = tk.Button(frame_nuevo, text="Crear Camión", command=crear_camion)
 btn_crear.pack(pady=10)
 
-# -----------------------------
-# SECCIÓN: SELECCIÓN Y CONTROLES
-# -----------------------------
-frame_ctrl = ttk.LabelFrame(root, text="Control del Camión")
-frame_ctrl.pack(side="left", fill="y", padx=10, pady=10)
+# Selección
+frame_ctrl = ttk.LabelFrame(panel, text="Control del Camión")
+frame_ctrl.pack(fill="x", pady=10)
 
 lista_camiones = ttk.Combobox(frame_ctrl, values=[])
 lista_camiones.pack(pady=5)
@@ -126,11 +142,10 @@ def actualizar_info():
             info.insert("end", str(c))
             return
 
-btn_seleccionar = tk.Button(frame_ctrl, text="Seleccionar", command=actualizar_info)
-btn_seleccionar.pack()
+btn_sel = tk.Button(frame_ctrl, text="Seleccionar", command=actualizar_info)
+btn_sel.pack()
 
-# CONTROLES
-
+# Controles
 vel = tk.Scale(frame_ctrl, from_=0, to=200, label="Velocidad", orient="horizontal")
 vel.pack(fill="x")
 
@@ -146,51 +161,35 @@ def aplicar_cambios():
 btn_aplicar = tk.Button(frame_ctrl, text="Aplicar Cambios", command=aplicar_cambios)
 btn_aplicar.pack(pady=5)
 
-# Añadir Caja
-frame_caja = ttk.LabelFrame(root, text="Añadir Caja")
-frame_caja.pack(side="left", fill="y", padx=10, pady=10)
-
-labels_caja = ["Código", "Peso", "Descripción", "Largo", "Ancho", "Alto"]
-entries_caja = {}
-for l in labels_caja:
-    tk.Label(frame_caja, text=l).pack()
-    e = tk.Entry(frame_caja)
-    e.pack()
-    entries_caja[l] = e
-
-def add_caja():
-    if not camion_activo:
-        messagebox.showerror("Error", "Selecciona un camión primero")
-        return
-    nueva = Caja(
-        entries_caja["Código"].get(),
-        float(entries_caja["Peso"].get()),
-        entries_caja["Descripción"].get(),
-        float(entries_caja["Largo"].get()),
-        float(entries_caja["Ancho"].get()),
-        float(entries_caja["Alto"].get())
-    )
-    camion_activo.AñadirCaja(nueva)
-    actualizar_info()
-
-btn_add_caja = tk.Button(frame_caja, text="Añadir Caja", command=add_caja)
-btn_add_caja.pack(pady=10)
-
 # Claxon
-btn_claxon = tk.Button(root, text="TOCAR CLAXON", bg="yellow", command=lambda: camion_activo.claxon() if camion_activo else None)
+btn_claxon = tk.Button(panel, text="TOCAR CLAXON", bg="yellow", command=lambda: camion_activo.claxon() if camion_activo else None)
 btn_claxon.pack(pady=20)
 
 # -----------------------------
-# MOVIMIENTO VISUAL
+# ANIMACIÓN
 # -----------------------------
-canvas = tk.Canvas(root, width=300, height=300, bg="white")
-canvas.pack(side="right", padx=10)
-cam_rect = canvas.create_rectangle(120, 120, 180, 180, fill="red")
-
 def animar():
-    if camion_activo:
-        dx = camion_activo.velocidad * 0.05
-        canvas.move(cam_rect, dx, 0)
+    for c in camiones:
+        rect = rectangulos[c.matricula]
+        texto = textos[c.matricula]
+
+        vel = c.velocidad * 0.05
+        ang = math.radians(c.rumbo)
+
+        dx = vel * math.cos(ang)
+        dy = vel * math.sin(ang)
+
+        canvas.move(rect, dx, dy)
+        canvas.move(texto, dx, dy)
+
+        x1, y1, x2, y2 = canvas.coords(rect)
+
+        # Mantener dentro de pantalla
+        if x1 < 0: canvas.move(rect, -x1, 0); canvas.move(texto, -x1, 0)
+        if y1 < 0: canvas.move(rect, 0, -y1); canvas.move(texto, 0, -y1)
+        if x2 > 800: canvas.move(rect, 800-x2, 0); canvas.move(texto, 800-x2, 0)
+        if y2 > 650: canvas.move(rect, 0, 650-y2); canvas.move(texto, 0, 650-y2)
+
     canvas.after(50, animar)
 
 animar()
