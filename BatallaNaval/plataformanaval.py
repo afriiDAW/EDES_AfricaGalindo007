@@ -14,4 +14,14 @@ class PlataformaNaval:
                 f"Velocidad  Máxima: {self.VelocidadMaxima}\n")
 
     def navegar(self,rumbo: float, velocidad: float):
-        pass
+        self.rumbo = float(rumbo)
+        self.velocidad = float(velocidad)
+    
+    def detenerse(self):
+        self.velocidad = 0
+    
+    def recibirDanio(self, puntos: int):
+        self.puntos = int(puntos)
+    
+    def estaOperativa(self):
+        return self.vida > 0
