@@ -25,3 +25,6 @@ class PlataformaNaval:
     
     def estaOperativa(self):
         return self.vida > 0
+    
+    def asumirMando(self, capitan):
+        self.capitan = capitan
