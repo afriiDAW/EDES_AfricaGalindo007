@@ -1,9 +1,12 @@
 class Flota:
-    def __init__(self, nombre: str, zonaOperacion: str):
+    def __init__(self,  nombre: str, zonaOperacion: str):
         self.nombre = nombre
         self.zonaOperacion = zonaOperacion
-        self.plataformas = []  
+        self.plataformas = []
 
+    def __str__(self):
+        return (f"Nombre de la flota: {self.nombre}"
+                f"Zona de Operación: {self.zonaOperacion}")
     def agregarPlataforma(self, p):
         self.plataformas.append(p)
         print(f"Plataforma '{p.nombre}' agregada a la flota '{self.nombre}'.")
@@ -13,12 +16,10 @@ class Flota:
             self.plataformas.remove(p)
             print(f"Plataforma '{p.nombre}' retirada de la flota '{self.nombre}'.")
         else:
-            print(f"La plataforma '{p.nombre}' no está en la flota.")
+            print("La plataforma no está en la flota.")
 
     def ordenarAtaque(self):
         print(f"La flota '{self.nombre}' ordena ataque en la zona '{self.zonaOperacion}'...")
         for plataforma in self.plataformas:
-            if hasattr(plataforma, "estaOperativa") and plataforma.estaOperativa():
-                print(f"→ {plataforma.nombre} ataca con velocidad {plataforma.VelocidadMaxima}")
-            else:
-                print(f"→ {plataforma.nombre} no está operativa.")
+            plataforma.atacar()
+    

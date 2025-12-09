@@ -3,3 +3,9 @@ class SistemaSensores ():
         self.tieneRadar = tieneRadar
         self.tieneSonar = tieneSonar
         self.rangoDeteccion = float(rangoDeteccion)
+    
+    def escanearSuperficie(self):
+        print("Escaneando superficie...")
+
+    def escanearSubmarino(self):
+        print("Escanenado submarinos...")

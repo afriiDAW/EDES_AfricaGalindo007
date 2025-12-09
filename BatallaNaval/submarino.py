@@ -18,7 +18,7 @@ class Submarino (PlataformaNaval):
     def emerger(self):
         self.profundidad = 0 
     
-    def lanzarTorpedo ():
+    def lanzarTorpedo (self):
         pass
 
         
