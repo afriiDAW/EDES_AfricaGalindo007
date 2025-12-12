@@ -1,24 +1,28 @@
-class Flota:
-    def __init__(self, nombre: str, zonaOperacion: str):
+class PlataformaNaval:
+    def __init__(self, nombre: str, pais: str, eslora: float, desplazamiento: float, velocidadMaxima: float):
         self.nombre = nombre
-        self.zonaOperacion = zonaOperacion
-        self.plataformas = []  
-
-    def agregarPlataforma(self, p):
-        self.plataformas.append(p)
-        print(f"Plataforma '{p.nombre}' agregada a la flota '{self.nombre}'.")
-
-    def retirarPlataforma(self, p):
-        if p in self.plataformas:
-            self.plataformas.remove(p)
-            print(f"Plataforma '{p.nombre}' retirada de la flota '{self.nombre}'.")
-        else:
-            print(f"La plataforma '{p.nombre}' no está en la flota.")
-
-    def ordenarAtaque(self):
-        print(f"La flota '{self.nombre}' ordena ataque en la zona '{self.zonaOperacion}'...")
-        for plataforma in self.plataformas:
-            if hasattr(plataforma, "estaOperativa") and plataforma.estaOperativa():
-                print(f"→ {plataforma.nombre} ataca con velocidad {plataforma.VelocidadMaxima}")
-            else:
-                print(f"→ {plataforma.nombre} no está operativa.")
+        self.pais = pais
+        self.eslora = float(eslora)
+        self.desplazamiento = float(desplazamiento)
+        self.velocidadMaxima = float(velocidadMaxima)
+    
+    def __str__(self):
+        return (f"Nombre de la Plataforma: {self.nombre}\n"
+                f"País: {self.pais}\n"
+                f"Eslora: {self.eslora}\n"
+                f"Desplazamiento: {self.desplazamiento}\n"
+                f"Velocidad Máxima: {self.velocidadMaxima}")
+    
+    def Navegar (self, rumbo: float, velocidad: float):
+        self.rumbo = float(rumbo)
+        self.velocidad = float(velocidad)
+    
+    def detenerse(self):
+        if self.velocidad == 0:
+            print("Se ha detenido la plataforma")
+    
+    def recibirdaño (self, puntos: int):
+        self.puntos = int(puntos)
+    
+    def estaOperativa (self):
+        print("La plataforma está operativa")
