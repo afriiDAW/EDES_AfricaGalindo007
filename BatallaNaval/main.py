@@ -7,6 +7,9 @@ from sistemasensores import SistemaSensores
 from submarino import Submarino
 from flota import Flota
 
+
+plataforma1 = PlataformaNaval("plataforma", "España", 20.2, 200, 300)
+
 # CAPITANES
 
 capitan1 = Capitan ("Dani", "Sargento", 20)
